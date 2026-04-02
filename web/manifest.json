@@ -1,0 +1,31 @@
+{
+    "name": "My Gang",
+    "short_name": "My Gang",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#FAFAFA",
+    "theme_color": "#1A1A1A",
+    "description": "Comunidades, questionários de entrada e eventos presenciais, online ou híbridos.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

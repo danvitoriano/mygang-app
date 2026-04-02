@@ -1,0 +1,92 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function groupDoc(gid) {
+      return get(/databases/$(database)/documents/groups/$(gid));
+    }
+
+    function isGroupOwner(gid) {
+      return signedIn() && groupDoc(gid).data.ownerId == request.auth.uid;
+    }
+
+    function memberPath(gid) {
+      return /databases/$(database)/documents/groups/$(gid)/members/$(request.auth.uid);
+    }
+
+    function memberDoc(gid) {
+      return get(memberPath(gid));
+    }
+
+    function isGroupAdmin(gid) {
+      return signedIn() &&
+        (isGroupOwner(gid) ||
+         (exists(memberPath(gid)) &&
+          memberDoc(gid).data.role == 'admin' &&
+          memberDoc(gid).data.status == 'active'));
+    }
+
+    function isActiveMember(gid) {
+      return signedIn() &&
+        exists(memberPath(gid)) &&
+        memberDoc(gid).data.status == 'active';
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create: if isSelf(uid);
+      allow update: if isSelf(uid);
+      allow delete: if false;
+    }
+
+    match /groups/{gid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isGroupAdmin(gid);
+      allow delete: if isGroupOwner(gid);
+
+      match /members/{mid} {
+        allow read: if signedIn();
+        allow create: if signedIn() && (
+          (groupDoc(gid).data.ownerId == request.auth.uid &&
+            mid == request.auth.uid &&
+            request.resource.data.role == 'admin' &&
+            request.resource.data.status == 'active') ||
+          isGroupAdmin(gid)
+        );
+        allow update: if isGroupAdmin(gid);
+        allow delete: if isGroupAdmin(gid);
+      }
+
+      match /questions/{qid} {
+        allow read: if signedIn();
+        allow write: if isGroupAdmin(gid);
+      }
+
+      match /applications/{aid} {
+        allow read: if isGroupAdmin(gid) || (signedIn() && resource.data.userId == request.auth.uid);
+        allow create: if signedIn() && request.resource.data.userId == request.auth.uid && request.resource.data.status == 'pending';
+        allow update: if isGroupAdmin(gid);
+        allow delete: if false;
+      }
+
+      match /events/{eid} {
+        allow read: if signedIn();
+        allow write: if isGroupAdmin(gid);
+
+        match /rsvps/{uid} {
+          allow read: if signedIn();
+          allow write: if signedIn() && request.auth.uid == uid && isActiveMember(gid);
+        }
+      }
+    }
+  }
+}

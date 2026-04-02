@@ -1,0 +1,30 @@
+# Flutter
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+**/Generated.xcconfig
+**/Flutter.podspec
+**/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/ephemeral/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Env / keys
+**/google-services.json
+**/GoogleService-Info.plist
+.env
+
+# Misc
+*.log
+.DS_Store
+
+# Agent / cache local (não versionar)
+.agents/
+.claude/
+.firebase/

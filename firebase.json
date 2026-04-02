@@ -1,0 +1,48 @@
+{
+  "firestore": {
+    "rules": "firebase/firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "mygang-mvp-apr2026",
+          "appId": "1:127328884954:android:ae4b52c1c2a420404dade3",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "mygang-mvp-apr2026",
+          "appId": "1:127328884954:ios:fed680490d73b0da4dade3",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "mygang-mvp-apr2026",
+          "configurations": {
+            "android": "1:127328884954:android:ae4b52c1c2a420404dade3",
+            "ios": "1:127328884954:ios:fed680490d73b0da4dade3",
+            "web": "1:127328884954:web:8e0c92da8e929bfa4dade3"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
